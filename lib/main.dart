@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cal/EvenModel.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -94,11 +96,6 @@ class _CalenderEventState extends State<CalenderEvent> {
               calendarStyle: const CalendarStyle(
                   markersAlignment: Alignment.bottomCenter,
                   isTodayHighlighted: true,
-                  markerSize: 0,
-                  selectedDecoration: BoxDecoration(
-                    color: Colors.blue,
-                    shape: BoxShape.circle,
-                  ),
                   selectedTextStyle: TextStyle(color: Colors.white),
                   todayDecoration: BoxDecoration(
                     color: Colors.purpleAccent,
@@ -126,7 +123,25 @@ class _CalenderEventState extends State<CalenderEvent> {
               ),
               calendarBuilders: CalendarBuilders(
                 markerBuilder: (BuildContext context, date, events) {
-                  if (events.isEmpty) return const SizedBox();
+                  if (events.isEmpty) return SizedBox();
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: events.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.only(top: 18),
+                          padding: const EdgeInsets.all(1),
+                          child: Container(
+                            // height: 7,
+                            width: 7,
+                            decoration: const BoxDecoration(
+                                shape: BoxShape.circle, color: Colors.black),
+                          ),
+                        );
+                      });
+                },
+                defaultBuilder: (BuildContext context, date, events) {
                   final difference = focusDay.difference(date).inDays;
                   print(difference);
                   return ListView.builder(
@@ -143,11 +158,12 @@ class _CalenderEventState extends State<CalenderEvent> {
                                 child: Text(
                                   date.day.toString(),
                                   style: const TextStyle(
-                                      color: Colors.white, fontSize: 12),
+                                      color: Colors.white, fontSize: 10),
                                 ),
                               ),
-                              difference <= 7
+                              difference < 7
                                   ? const Positioned(
+                                      top: 35,
                                       child: Text(
                                         "new",
                                         style: TextStyle(
