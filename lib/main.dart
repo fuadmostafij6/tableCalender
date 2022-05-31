@@ -46,8 +46,9 @@ class _CalenderEventState extends State<CalenderEvent> {
   Map<DateTime, List<Event>> selectedEvents = {};
   TextEditingController _eventController = TextEditingController();
   DateTime selectedDay = DateTime.now();
-  DateTime focusDay = DateTime.now();
+  DateTime focusDay = DateTime(2022, 16, 5);
   bool evenDate = false;
+  bool show = false;
   List<Event> _getEventsfromDay(DateTime date) {
     return selectedEvents[date] ?? [];
   }
@@ -122,63 +123,74 @@ class _CalenderEventState extends State<CalenderEvent> {
                 ),
               ),
               calendarBuilders: CalendarBuilders(
+                // markerBuilder: (BuildContext context, date, events) {
+                //   if (events.isEmpty) return SizedBox();
+                //   return ListView.builder(
+                //       shrinkWrap: true,
+                //       scrollDirection: Axis.horizontal,
+                //       itemCount: events.length,
+                //       itemBuilder: (context, index) {
+                //         return Container(
+                //           margin: const EdgeInsets.only(top: 25),
+                //           padding: const EdgeInsets.all(1),
+                //           child: Container(
+                //             // height: 7,
+                //             width: 7,
+                //             decoration: const BoxDecoration(
+                //                 shape: BoxShape.circle, color: Colors.black),
+                //           ),
+                //         );
+                //       });
+                // },
                 markerBuilder: (BuildContext context, date, events) {
-                  if (events.isEmpty) return SizedBox();
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: events.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: const EdgeInsets.only(top: 18),
-                          padding: const EdgeInsets.all(1),
-                          child: Container(
-                            // height: 7,
-                            width: 7,
-                            decoration: const BoxDecoration(
-                                shape: BoxShape.circle, color: Colors.black),
-                          ),
-                        );
-                      });
-                },
-                defaultBuilder: (BuildContext context, date, events) {
                   final difference = focusDay.difference(date).inDays;
                   print(difference);
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 1,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          height: 40,
-                          width: 40,
-                          child: Stack(
-                            children: [
-                              Center(
-                                child: Text(
-                                  date.day.toString(),
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 10),
-                                ),
-                              ),
-                              difference < 7
-                                  ? const Positioned(
-                                      top: 35,
-                                      child: Text(
-                                        "new",
-                                        style: TextStyle(
-                                            fontSize: 10, color: Colors.white),
-                                      ),
-                                      bottom: 6,
-                                      left: 10,
-                                    )
-                                  : Container()
-                            ],
+                  if (events.isEmpty) return const SizedBox();
+                  return InkWell(
+                    onTap: () => setState(() {
+                      selectedEvents[date] = [Event(title: "")];
+                    }),
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: ListView.builder(
+                                padding: const EdgeInsets.all(0),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: events.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    height: 8,
+                                    width: 8,
+                                    decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.black),
+                                  );
+                                }),
                           ),
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: Colors.red),
-                        );
-                      });
+                          Center(
+                            child: Text(
+                              date.day.toString(),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 15),
+                            ),
+                          ),
+                          ..._getEventsfromDay(date).map(
+                            (Event event) => Text(
+                              event.title,
+                            ),
+                          ),
+                        ],
+                      ),
+                      decoration: const BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.red),
+                    ),
+                  );
                 },
               ),
             ),
