@@ -46,7 +46,7 @@ class _CalenderEventState extends State<CalenderEvent> {
   Map<DateTime, List<Event>> selectedEvents = {};
   TextEditingController _eventController = TextEditingController();
   DateTime selectedDay = DateTime.now();
-  DateTime focusDay = DateTime(2022, 16, 5);
+  DateTime focusDay = DateTime.now();
   bool evenDate = false;
   bool show = false;
   List<Event> _getEventsfromDay(DateTime date) {
@@ -180,11 +180,12 @@ class _CalenderEventState extends State<CalenderEvent> {
                                   color: Colors.white, fontSize: 15),
                             ),
                           ),
-                          ..._getEventsfromDay(date).map(
-                            (Event event) => Text(
-                              event.title,
-                            ),
-                          ),
+                          ..._getEventsfromDay(date)
+                              .map((Event event) => difference > 6
+                                  ? Text(
+                                      event.title,
+                                    )
+                                  : const Text("")),
                         ],
                       ),
                       decoration: const BoxDecoration(
