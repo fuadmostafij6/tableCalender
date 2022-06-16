@@ -1,9 +1,12 @@
 import 'dart:math';
 
 import 'package:cal/EvenModel.dart';
+import 'package:cal/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+
+import 'arCustom.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,7 +32,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: CalenderEvent(),
+      home: ObjectsOnPlanesWidget(),
     );
   }
 }
